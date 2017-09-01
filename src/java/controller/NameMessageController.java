@@ -8,11 +8,13 @@ package controller;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import model.NameMessageService;
 
 /**
  *
@@ -33,15 +35,17 @@ public class NameMessageController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        
         String nameEntered = request.getParameter("userName");
-        String msg = "Hello " + nameEntered + " welcome to Java Web Development";
+        NameMessageService nms = new NameMessageService();
+        String msg = nms.produceMessage(nameEntered);
         request.setAttribute("nameMsg", msg);
         
         // To send any data to the VIEW you must use this to forward the
         // request object, which contains the data, to the destination. The
         // destination can be a JSP or another Controller, but cannot be an html page.
         RequestDispatcher view
-                = request.getRequestDispatcher("/response.jsp");
+                = request.getRequestDispatcher("/response.jsp"); // Where you are sending the data
         view.forward(request, response);
 
     }
@@ -85,4 +89,10 @@ public class NameMessageController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
+    //overriden init method that is inherited
+    @Override
+    public void init(ServletConfig config)throws ServletException{
+        
+    }
+            
 }
